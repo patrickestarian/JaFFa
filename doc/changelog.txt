@@ -1,0 +1,12 @@
+12/18/2009 - Version 0.9
+  - Initial version; only downloads feeds as XML files for a public user
+
+11/01/2010 - Version 1.0
+  - Implemented downloading of thumbnails and attached files
+ 
+11/07/2010 - Version 1.1
+  - Fixed the problem with downloading large files (java.lang.OutOfMemoryError
+  - Implemented authentication
+  - Ability to download "private" and "discussions" feeds (when authenticated)
+  - Populates file names instead of the entry/thumbnail ID's
+  - Improved performance
