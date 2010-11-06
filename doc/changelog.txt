@@ -10,3 +10,5 @@
   - Ability to download "private" and "discussions" feeds (when authenticated)
   - Populates file names instead of the entry/thumbnail ID's
   - Improved performance
+  - Added to github
+
