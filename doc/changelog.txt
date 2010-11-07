@@ -4,11 +4,12 @@
 11/01/2010 - Version 1.0
   - Implemented downloading of thumbnails and attached files
  
-11/07/2010 - Version 1.1
+11/07/2010 - Version 1.1.0
   - Fixed the problem with downloading large files (java.lang.OutOfMemoryError
   - Implemented authentication
   - Ability to download "private" and "discussions" feeds (when authenticated)
   - Populates file names instead of the entry/thumbnail ID's
   - Improved performance
+  - Added config file and a batch file to make it easy to run
   - Added to github
 
