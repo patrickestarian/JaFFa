@@ -13,3 +13,6 @@
   - Added config file and a batch file to make it easy to run
   - Added to github
 
+11/08/2010 - Version 1.1.1
+  - Fixed the issue with reading backup_dir property
+ 

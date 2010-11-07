@@ -149,8 +149,8 @@ public class Backup {
 	        	PROXY = null;
 	        }
 	        
-	        String rootDir = config.getProperty("backup_dir");
-	        if (rootDir == null  ||  rootDir.trim().equals("")) {
+	        ROOT = config.getProperty("backup_dir");
+	        if (ROOT == null  ||  ROOT.trim().equals("")) {
 	        	System.err.println("Please set the backup_dir in " + CONFIG_FILE);
 	        	return;
 	        }
