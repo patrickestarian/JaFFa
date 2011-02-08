@@ -1,4 +1,4 @@
-Manifest-Version: 1.1.1
+Manifest-Version: 1.1.2
 Created-By: Patrick Estarian
 Main-Class: org/patrickestarian/ff/Backup
 
