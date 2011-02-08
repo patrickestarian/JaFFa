@@ -52,6 +52,7 @@ import org.patrickestarian.ff.schema.EntryType;
 import org.patrickestarian.ff.schema.Feed;
 import org.patrickestarian.ff.schema.From;
 import org.patrickestarian.ff.schema.Thumbnail;
+import org.patrickestarian.ff.schema.To;
 
 import sun.misc.BASE64Encoder;
 
@@ -67,10 +68,12 @@ public class Backup {
 	private static List<Entry> AllEntries = new ArrayList<Entry>();
 	private static HashSet<String> EntryIDs = new HashSet<String>();
 	private static HashSet<String> EntryDirs = new HashSet<String>();
+	private static HashSet<String> filterRooms = new HashSet<String>();
+	private static HashSet<String> filterMediaTypes = new HashSet<String>();
 	private static Feed UserFeed;
 	private static boolean VERBOSE = false;
 	private static boolean FORCE_DOWNLOAD = false;
-	private static String CONFIG_FILE = "config.properties";
+	private static String CONFIG_FILE = "doc/config.properties";
 	private static long StartTime = System.currentTimeMillis();
 	
 
@@ -165,7 +168,31 @@ public class Backup {
 	        	FORCE_DOWNLOAD = true;
 	        }
 
-			loadAllUserFeedsFromFF(userID);
+	        String filterRoomsList = config.getProperty("filter_rooms");
+	        if (filterRoomsList != null) {
+	        	filterRoomsList = filterRoomsList.trim();
+	        	String[] filterRoomsArray = filterRoomsList.split(",");
+	        	if (filterRoomsArray != null) {
+	        		for (String filterRoom : filterRoomsArray) {
+	        			String roomID = filterRoom.trim();
+	        			filterRooms.add(roomID);
+	        		}
+	        	}
+	        }
+
+	        String filterMediaTypesList = config.getProperty("filter_media_types");
+	        if (filterMediaTypesList != null) {
+	        	filterMediaTypesList = filterMediaTypesList.trim();
+	        	String[] filterMediaTypesArray = filterMediaTypesList.split(",");
+	        	if (filterMediaTypesArray != null) {
+	        		for (String filterMediaType : filterMediaTypesArray) {
+	        			String mediaType = filterMediaType.trim().toLowerCase();
+	        			filterMediaTypes.add(mediaType);
+	        		}
+	        	}
+	        }
+
+        	loadAllUserFeedsFromFF(userID);
 	        
 	        //downloadMedia("http://img.youtube.com/vi/6ixwKBwfT38/2.jpg", "/backup/ff/youtube.jpg");
 			
@@ -173,11 +200,10 @@ public class Backup {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public void loadAllUserFeedsFromFF(String userID) throws Exception {
 
 		loadUserFeedsFromFF(userID);
-		
 		if (CREDENTIALS != null) {
 			loadDirectFeedsFromFF(userID);
 			loadDiscussionFeedsFromFF(userID);
@@ -189,7 +215,7 @@ public class Backup {
 			downloadEntry(userID, entry);
 		}
 	}
-
+	
 	public void loadUserFeedsFromFF(String userID) throws Exception {
 		String userHome = ROOT + "/" + userID;
 		File userHomeDir = new File(userHome);
@@ -370,7 +396,11 @@ public class Backup {
 	}
 
 	public void downloadEntry(String userID, Entry entry) throws Exception {
-
+		
+		if (!filterCheckForRooms(entry)) {
+			return;
+		}
+		
 		String entryName = entry.getUrl();
 		entryName = entryName.substring(entryName.lastIndexOf('/') + 1);
 		if (entryName.length() > 32) {
@@ -430,6 +460,42 @@ public class Backup {
 		}
 	}
 
+	public boolean filterCheckForMediaType(String fileName) {
+		if (filterMediaTypes.size() == 0) {
+			return true;
+		}
+		
+		String ext = fileName.substring(fileName.lastIndexOf(".")+1).toLowerCase();
+		if (filterMediaTypes.contains(ext)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean filterCheckForRooms(Entry entry) {
+		if (filterRooms.size() == 0) {
+			return true;
+		}
+		
+		List<To> tos = entry.getTo();
+		if (tos == null) {
+			return false;
+		}
+
+		for (To to : tos) {
+			String entryRoomID = to.getId();
+			if (entryRoomID == null) {
+				return false;
+			}
+			if (filterRooms.contains(entryRoomID)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public Feed loadXML(String xmlFilePath) throws Exception {
 		File file = new File(xmlFilePath);
 		if (!file.exists()) {
@@ -635,6 +701,10 @@ public class Backup {
 
 		} else {
 			toDir = to.substring(0, to.lastIndexOf('/'));
+		}
+		
+		if (!filterCheckForMediaType(fileName)) {
+			return null;
 		}
 		
 		String filePath = toDir + "/" + fileName;
