@@ -32,6 +32,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element ref="{}file" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element ref="{}via"/>
  *         &lt;element ref="{}from"/>
+ *         &lt;element ref="{}to" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element ref="{}thumbnail" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element ref="{}url"/>
  *         &lt;element ref="{}comment" maxOccurs="unbounded" minOccurs="0"/>
@@ -52,6 +53,7 @@ import javax.xml.bind.annotation.XmlType;
     "file",
     "via",
     "from",
+    "to",
     "thumbnail",
     "url",
     "comment",
@@ -69,6 +71,7 @@ public class Entry {
     protected Via via;
     @XmlElement(required = true)
     protected From from;
+    protected List<To> to;
     protected List<Thumbnail> thumbnail;
     @XmlElement(required = true)
     @XmlSchemaType(name = "anyURI")
@@ -179,6 +182,35 @@ public class Entry {
      */
     public void setFrom(From value) {
         this.from = value;
+    }
+
+    /**
+     * Gets the value of the to property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the to property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getTo().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link String }
+     * 
+     * 
+     */
+    public List<To> getTo() {
+        if (to == null) {
+            to = new ArrayList<To>();
+        }
+        return this.to;
     }
 
     /**
