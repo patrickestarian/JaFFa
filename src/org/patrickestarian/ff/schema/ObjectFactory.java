@@ -72,6 +72,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link To }
+     * 
+     */
+    public To createTo() {
+        return new To();
+    }
+
+    /**
      * Create an instance of {@link Entry }
      * 
      */
